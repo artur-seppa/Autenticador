@@ -1,7 +1,7 @@
 import react from "react";
 import { AppRouter } from "./routes";
 import "./assets/global.css";
-import { AuthProvider } from "./context/auth";
+import { AuthProvider } from "./context/AuthContext";
 
 /*
   O css global eh passado a todas as rotas 

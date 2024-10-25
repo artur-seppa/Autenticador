@@ -1,12 +1,15 @@
 import react, { useContext, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { LayoutComponents } from "../../components/LayoutComponents";
-import { AuthContext } from "../../context/auth";
+import { AuthContext } from "../../context/AuthContext";
+import Swal from "sweetalert2/dist/sweetalert2.js";
 
 export const Login = () => {
+  const Swal = require("sweetalert2");
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { signed, singIn } = useContext(AuthContext);
+  const { signed, signIn } = useContext(AuthContext);
 
   /*
     o handleSignIn acessa o metodo singIn do context
@@ -21,12 +24,21 @@ export const Login = () => {
     // nao permite o recarregamento da pagina
     e.preventDefault();
 
-    const data = {
-      email,
-      password,
-    };
+    if (email == "" || password == "") {
+      Swal.fire({
+        title: "Atenção!",
+        text: "Por favor, preencher todos os campos",
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
+    } else {
+      const data = {
+        email,
+        password,
+      };
 
-    await singIn(data);
+      await signIn(data);
+    }
   };
 
   if (signed) {
@@ -35,9 +47,7 @@ export const Login = () => {
     return (
       <LayoutComponents>
         <form onSubmit={handleSignIn} className="login-from">
-          <span className="login-from-title">Criar Conta</span>
-
-          <span className="login-from-title">logo</span>
+          <span className="login-from-title">Login</span>
 
           <div className="wrap-input">
             <input

@@ -26,13 +26,13 @@ export class AuthController {
         const user = await prisma.user.findUnique({ where: { email } })
 
         if (!user) {
-            return res.json({ error: "User not found" })
+            return res.json({ error: "Usuário não encontrado" })
         }
 
         const isValuePassword = await bcrypt.compare(password, user.password);
 
         if (!isValuePassword) {
-            return res.json({ error: "password invalid" });
+            return res.json({ error: "Senha inválida" });
         }
 
         const token = sign({ id: user.id }, "secret", { expiresIn: "1d" })

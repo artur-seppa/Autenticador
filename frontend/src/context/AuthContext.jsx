@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { api } from "../services/api";
 import { Navigate } from "react-router-dom";
+import Swal from "sweetalert2/dist/sweetalert2.js";
 
 /* 
     cria um contexto global para quem impoe o seu uso
@@ -9,6 +10,8 @@ import { Navigate } from "react-router-dom";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  const Swal = require("sweetalert2");
+
   const [user, setUser] = useState(null);
 
   /*
@@ -53,15 +56,20 @@ export const AuthProvider = ({ children }) => {
     const response = await api.post("/auth", { email, password });
 
     if (response.data.error) {
-      alert(response.data.error);
+      Swal.fire({
+        title: "Erro!",
+        text: response.data.error,
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
     } else {
-      setUser(response.data.user);
+      setUser(response.data);
+        api.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${response.data.token}`;
 
-      api.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${response.data.token}`;
-      localStorage.setItem("@auth:token", response.data.token);
-      localStorage.setItem("@auth:token", JSON.stringify(response.data.user));
+        localStorage.setItem("@Auth:user", JSON.stringify(response.data.user));
+        localStorage.setItem("@Auth:token", response.data.token);
     }
   };
 
@@ -86,7 +94,7 @@ export const AuthProvider = ({ children }) => {
         user,
         signed: !!user,
         signIn,
-        signOut
+        signOut,
       }}
     >
       {children}

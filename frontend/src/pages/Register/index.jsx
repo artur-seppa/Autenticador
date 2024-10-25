@@ -2,8 +2,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { LayoutComponents } from "../../components/LayoutComponents";
 import { api } from "../../services/api";
+import Swal from 'sweetalert2/dist/sweetalert2.js';
 
 export const Register = () => {
+  const Swal = require("sweetalert2");
+
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -15,24 +18,33 @@ export const Register = () => {
     - Passamos como informacao o tipo de metodo (post),
     a rota, e os parametros como body.
   */
-  const handleSaveUser = async(e) => {
+  const handleSaveUser = async (e) => {
     // nao permite o recarregamento da pagina
     e.preventDefault();
 
-    const data = {
-      email, password, name
-    }
+    if (email == "" || password == "" || name == "") {
+      Swal.fire({
+        title: "Atenção!",
+        text: "Por favor, preencher todos os campos",
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
+    } else {
+      const data = {
+        email,
+        password,
+        name,
+      };
 
-    const response = await api.post("/create", data);
-    console.log(response.data)
-  }
+      const response = await api.post("/create", data);
+      console.log(response.data);
+    }
+  };
 
   return (
     <LayoutComponents>
       <form onSubmit={handleSaveUser} className="login-from">
         <span className="login-from-title">Criar Conta</span>
-
-        <span className="login-from-title">logo</span>
 
         <div className="wrap-input">
           <input
@@ -65,7 +77,9 @@ export const Register = () => {
         </div>
 
         <div className="container-login-form-btn">
-          <button type="submit" className="login-form-btn">Cadastrar</button>
+          <button type="submit" className="login-form-btn">
+            Cadastrar
+          </button>
         </div>
 
         <div className="text-center">
