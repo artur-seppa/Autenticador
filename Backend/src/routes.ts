@@ -1,10 +1,12 @@
 import {Router} from 'express'
 import { UserController } from './controller/UserController';
+import { FinancesController } from './controller/FinancesController';
 import { AuthController } from './controller/AuthController';
 import { AuthMiddlware } from './middlewares/auth';
 
 // Controllers
 const usercontroller = new UserController();
+const financesController = new FinancesController();
 const authcontroller = new AuthController();
 
 /* 
@@ -17,6 +19,13 @@ const authcontroller = new AuthController();
 */
 export const router = Router();
 
+// Authenticate
+router.post("/auth", authcontroller.authenticate)
+
+// User
 router.post("/create", usercontroller.store)
 router.get("/users", AuthMiddlware, usercontroller.index)
-router.post("/auth", authcontroller.authenticate)
+
+// Finances
+router.post("/finance", AuthMiddlware, financesController.store)
+router.post("/finance/search", AuthMiddlware, financesController.search)

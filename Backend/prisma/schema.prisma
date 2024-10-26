@@ -14,8 +14,22 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  name String?
-  email String @unique
-  password String?
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  password String
+
+  financas Financas[] // Um usuário pode ter várias finanças
+}
+
+model Financas {
+  id_financas Int      @id @default(autoincrement())
+  descricao   String?
+  categoria   String
+  valor       Float
+  tipo        String
+  created_at  DateTime @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id]) // Chave estrangeira para User
 }
