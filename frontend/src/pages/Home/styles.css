@@ -1,14 +1,21 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
 .container {
   width: 100%;
-  min-height: 100vh;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background-color: #111;
 }
 
-/* .container-home {
-  width: 100%;
+.container-home {
   min-height: 100vh;
 
   display: flex;
   flex-wrap: wrap;
-} */
+  justify-content: center;
+}

@@ -25,7 +25,7 @@ export const Header = () => {
   };
 
   return (
-    <AppBar position="relative" style={{ background: 'transparent' }}>
+    <AppBar position="fixed" style={{ background: '#111' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <AdbIcon sx={{ mr: 1 }} />
