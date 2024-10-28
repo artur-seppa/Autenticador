@@ -1,14 +1,14 @@
 .container {
   width: 100%;
+  min-height: 100vh;
   margin: 0 auto;
+  background-color: #111;
 }
 
-.container-home {
+/* .container-home {
   width: 100%;
   min-height: 100vh;
 
   display: flex;
   flex-wrap: wrap;
-
-  background-color: #111;
-}
+} */
