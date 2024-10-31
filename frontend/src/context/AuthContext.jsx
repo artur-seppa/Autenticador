@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { api } from "../services/api";
+import { api } from "../services/api/api";
 import { Navigate } from "react-router-dom";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 
@@ -24,13 +24,41 @@ export const AuthProvider = ({ children }) => {
     valor no localStorage
   */
 
+  const verifyToken = async () => {
+    try {
+      await api.get("/auth/verify"); // Endpoint de verificação no backend
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        console.log("Token expirado ou inválido:", error.response.data);
+      } else {
+        console.log("Erro inesperado:", error);
+      }
+
+      return false;
+    }
+  };
+
   useEffect(() => {
     const loadingStoresData = async () => {
       const storageUser = localStorage.getItem("@Auth:user");
       const storageToken = localStorage.getItem("@Auth:token");
 
       if (storageUser && storageToken) {
-        setUser(storageUser);
+        api.defaults.headers.common["Authorization"] = `Bearer ${storageToken}`;
+
+        const response = await verifyToken();
+
+        if (response) {
+          setUser(storageUser);
+        } else {
+          signOut();
+          Swal.fire({
+            title: "Sessão expirada",
+            text: "Por favor, faça login novamente.",
+            icon: "warning",
+            confirmButtonText: "Ok",
+          });
+        }
       }
     };
 
@@ -64,12 +92,12 @@ export const AuthProvider = ({ children }) => {
       });
     } else {
       setUser(response.data);
-        api.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${response.data.token}`;
+      api.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${response.data.token}`;
 
-        localStorage.setItem("@Auth:user", JSON.stringify(response.data.user));
-        localStorage.setItem("@Auth:token", response.data.token);
+      localStorage.setItem("@Auth:user", JSON.stringify(response.data.user));
+      localStorage.setItem("@Auth:token", response.data.token);
     }
   };
 
@@ -84,6 +112,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("@Auth: token");
     localStorage.removeItem("@Auth: user");
     setUser(null);
+    delete api.defaults.headers.common["Authorization"]; // Remover o cabeçalh
 
     return <Navigate to="/" />;
   };

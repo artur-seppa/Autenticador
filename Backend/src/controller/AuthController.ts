@@ -20,29 +20,29 @@ import { sign } from "jsonwebtoken";
 */
 
 export class AuthController {
-    async authenticate(req: Request, res: Response) {
-        const { email, password } = req.body;
+  async authenticate(req: Request, res: Response) {
+    const { email, password } = req.body;
 
-        const user = await prisma.user.findUnique({ where: { email } })
+    const user = await prisma.user.findUnique({ where: { email } });
 
-        if (!user) {
-            return res.json({ error: "Usuário não encontrado" })
-        }
-
-        const isValuePassword = await bcrypt.compare(password, user.password);
-
-        if (!isValuePassword) {
-            return res.json({ error: "Senha inválida" });
-        }
-
-        const token = sign({ id: user.id }, "secret", { expiresIn: "1d" })
-
-        return res.json({
-            user: {
-                id: user.id,
-                email: user.email
-            },
-            token
-        })
+    if (!user) {
+      return res.json({ error: "Usuário não encontrado" });
     }
+
+    const isValuePassword = await bcrypt.compare(password, user.password);
+
+    if (!isValuePassword) {
+      return res.json({ error: "Senha inválida" });
+    }
+
+    const token = sign({ id: user.id }, "secret", { expiresIn: "1d" });
+
+    return res.json({
+      user: {
+        id: user.id,
+        email: user.email,
+      },
+      token,
+    });
+  }
 }

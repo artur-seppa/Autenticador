@@ -21,6 +21,7 @@ export const router = Router();
 
 // Authenticate
 router.post("/auth", authcontroller.authenticate)
+router.get("/auth/verify", AuthMiddlware)
 
 // User
 router.post("/create", usercontroller.store)

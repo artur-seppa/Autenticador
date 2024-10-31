@@ -21,7 +21,7 @@ export class FinancesController {
 
     const financas = await prisma.financas.findMany({
       where: {
-        userId: Number(userId), // Filtra as finanças pelo userId
+        userId: userId // Filtra as finanças pelo userId
       },
     });
 

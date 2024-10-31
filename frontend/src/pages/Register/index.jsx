@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { LayoutComponents } from "../../components/LayoutComponents";
-import { api } from "../../services/api";
+import { api } from "../../services/api/api";
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 
 export const Register = () => {
