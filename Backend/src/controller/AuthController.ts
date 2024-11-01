@@ -35,7 +35,7 @@ export class AuthController {
       return res.json({ error: "Senha inválida" });
     }
 
-    const token = sign({ id: user.id }, "secret", { expiresIn: "1d" });
+    const token = sign({ id: user.id }, "secret", { expiresIn: "1h" });
 
     return res.json({
       user: {
@@ -44,5 +44,9 @@ export class AuthController {
       },
       token,
     });
+  }
+
+  async verifyToken(req: Request, res: Response) {
+    return res.status(200).json({ message: "Token is valid" });
   }
 }

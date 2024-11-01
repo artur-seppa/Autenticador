@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -7,7 +7,12 @@ import { FinanceContext } from "../../context/FinanceContext";
 import { format } from "date-fns";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
 import { Typography, Box } from "@mui/material";
+import Swal from "sweetalert2";
+
+import { FaRegArrowAltCircleUp, FaRegArrowAltCircleDown } from "react-icons/fa";
+import { ModalForms } from "../ModalForms";
 
 const darkTheme = createTheme({
   palette: {
@@ -15,46 +20,104 @@ const darkTheme = createTheme({
   },
 });
 
-const columns = [
-  { field: "id", headerName: "ID", flex: 1 },
-  { field: "descricao", headerName: "Descrição", flex: 2 },
-  { field: "categoria", headerName: "Categoria", flex: 1.5 },
-  { field: "valor", headerName: "Valor", type: "number", flex: 1.5 },
-  { field: "tipo", headerName: "Tipo", flex: 1 },
-  { field: "data", headerName: "Data", type: "Date", flex: 1 },
-  { field: "action", headerName: "Action", flex: 1 },
-];
-
-const paginationModel = { page: 0, pageSize: 5 };
-
 export const Table = () => {
-  const { data } = useContext(FinanceContext);
-
-  const handleDelete = (item) => {
-    // Aqui você pode implementar a lógica para deletar os itens selecionados
-    console.log(item);
-    // Exemplo: Implementar lógica de exclusão com base nos IDs selecionados
-  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { data, removeItem } = useContext(FinanceContext);
 
   const rows = Array.isArray(data.financas)
     ? data.financas.map((item) => ({
         id: item.id_financas,
         descricao: item.descricao,
-        categoria: item.categoria,
-        valor: item.valor,
         tipo: item.tipo,
+        valor: item.valor,
         data: format(new Date(item.created_at), "dd/MM/yyyy"),
-        action: (
-          <IconButton onClick={handleDelete(item.id_financas)} color="error">
-            <DeleteIcon />
-          </IconButton>
-        ),
+        categoria: item.categoria,
       }))
     : [];
 
-  const handleSelectionChange = (selection) => {
-    console.log(selection);
+  const paginationModel = { page: 0, pageSize: 5 };
+
+  const handleDelete = async (id_financas, categoria, valor) => {
+    const result = await Swal.fire({
+      title: "Deseja mesmo deletar o item?",
+      text: "Você não poderá reverter isso!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "black",
+      confirmButtonText: "Deletar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (result.isConfirmed) {
+      const response = await removeItem(id_financas, categoria, valor);
+
+      if (response) {
+        Swal.fire("Deletado!", "Item deletado com sucesso.", "success");
+      }
+    }
   };
+
+  const columns = [
+    { field: "id", headerName: "ID", flex: 1 },
+    { field: "descricao", headerName: "Descrição", flex: 2 },
+    { field: "tipo", headerName: "Tipo", flex: 1 },
+    { field: "valor", headerName: "Valor (R$)", type: "number", flex: 1.5 },
+    { field: "data", headerName: "Data", type: "Date", flex: 1 },
+    {
+      field: "categoria",
+      headerName: "Categoria",
+      flex: 1.5,
+      renderCell: (params) => (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+            color:
+              params.value === "entrada"
+                ? "hsl(120, 61%, 77%)"
+                : "hsl(0, 94%, 80%)",
+          }}
+        >
+          {params.value === "entrada" ? (
+            <FaRegArrowAltCircleUp size={20} /> // Ajuste o tamanho conforme desejado
+          ) : (
+            <FaRegArrowAltCircleDown size={20} />
+          )}
+        </Box>
+      ),
+    },
+    {
+      field: "action",
+      headerName: "Ação",
+      flex: 1,
+      renderCell: (params) => (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+          }}
+        >
+          <IconButton
+            onClick={() =>
+              handleDelete(
+                params.row.id,
+                params.row.categoria,
+                params.row.valor
+              )
+            }
+            color="error"
+          >
+            <DeleteIcon />
+          </IconButton>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -67,9 +130,13 @@ export const Table = () => {
       >
         <Typography variant="h6">Finanças</Typography>
 
-        <IconButton onClick={handleDelete} color="error">
-          <DeleteIcon />
+        <IconButton onClick={() => setIsModalOpen(true)} color="primary">
+          <AddIcon />
         </IconButton>
+
+        {isModalOpen && ( // Renderiza o modal condicionalmente
+          <ModalForms onClose={() => setIsModalOpen(false)} />
+        )}
       </Box>
 
       <Paper sx={{ height: 400, width: "100%", position: "relative" }}>
@@ -78,11 +145,6 @@ export const Table = () => {
           columns={columns}
           initialState={{ pagination: { paginationModel } }}
           pageSizeOptions={[5, 10]}
-          checkboxSelection
-          onCellClick={handleSelectionChange}
-          // onCellModesModelChange={handleSelectionChange}
-          // onColumnHeaderClick={handleSelectionChange}
-          onClick={handleSelectionChange}
           sx={{ border: 0 }}
         />
       </Paper>

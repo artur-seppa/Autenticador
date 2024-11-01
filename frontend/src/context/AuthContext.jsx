@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
 
   const verifyToken = async () => {
     try {
-      await api.get("/auth/verify"); // Endpoint de verificação no backend
+      return await api.get("/auth/verify");
     } catch (error) {
       if (error.response && error.response.status === 401) {
         console.log("Token expirado ou inválido:", error.response.data);
@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
 
         const response = await verifyToken();
 
-        if (response) {
+        if (response.status == 200) {
           setUser(storageUser);
         } else {
           signOut();

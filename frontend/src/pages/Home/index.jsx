@@ -1,7 +1,5 @@
 import { react, useReducer, useContext, useEffect } from "react";
 import { FinanceProvider } from "../../context/FinanceContext";
-// import { myReducer, myState } from "../../services/reducer/financesReducer";
-// import { api } from "../../services/api/api";
 
 import { Container, Box, Card, CardContent } from "@mui/material";
 

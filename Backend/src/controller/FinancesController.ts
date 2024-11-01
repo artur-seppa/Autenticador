@@ -21,7 +21,7 @@ export class FinancesController {
 
     const financas = await prisma.financas.findMany({
       where: {
-        userId: userId // Filtra as finanças pelo userId
+        userId: userId, // Filtra as finanças pelo userId
       },
     });
 
@@ -34,7 +34,7 @@ export class FinancesController {
       .filter((financa) => financa.categoria === "saida")
       .reduce((sum, financa) => sum + parseFloat(financa.valor.toFixed(2)), 0);
 
-    const total = totalEntrada - totalSaida; // Total = ENTRADA - SAIDA
+    const total = totalEntrada - totalSaida;
 
     return res.json({ total, totalEntrada, totalSaida, financas });
   }
@@ -55,5 +55,27 @@ export class FinancesController {
 
     // retorna o usuario criado no banco
     return res.json({ financa });
+  }
+
+  async deleteItem(req: Request, res: Response) {
+    const { id_financas } = req.body;
+
+    if (!id_financas) {
+      return res.status(400).json({ error: "ID do item não fornecido" });
+    }
+
+    try {
+      const deletedFinanca = await prisma.financas.delete({
+        where: { id_financas: id_financas },
+      });
+
+      return res
+        .status(200)
+        .json({ response: "item deletado com sucesso"});
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ error: "Erro ao deletar o item", details: error });
+    }
   }
 }

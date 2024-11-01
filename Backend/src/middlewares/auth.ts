@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { verify } from "jsonwebtoken";
+import { verify, JwtPayload, TokenExpiredError } from "jsonwebtoken"; // Adicione TokenExpiredError aqui
 
 /*
     TokenPayload define as tipagens padroes para o 
@@ -20,27 +20,31 @@ import { verify } from "jsonwebtoken";
 */
 
 type TokenPayload = {
-    id: string,
-    iat: number,
-    exp: number
-}
+  id: string;
+  iat: number;
+  exp: number;
+};
 
 export function AuthMiddlware(req: Request, res: Response, next: NextFunction) {
-    const { authorization } = req.headers;
+  const { authorization } = req.headers;
 
-    if (!authorization) {
-        res.status(401).json({ error: "Token not provided" })
+  if (!authorization) {
+    res.status(401).json({ error: "Token not provided" });
+  }
+
+  const [, token] = authorization?.split(" ");
+
+  try {
+    const decode = verify(token, "secret") as JwtPayload;
+    const { id } = decode as TokenPayload;
+
+    req.userId = id;
+    next(); // Continua para o próximo handler/controller
+  } catch (error) {
+    if (error instanceof TokenExpiredError) {
+      return res.status(401).json({ error: "Token expired" });
     }
 
-    const [, token] = authorization?.split(" ");
-
-    try {
-        const decode = verify(token, "secret");
-        const { id } = decode as TokenPayload;
-
-        req.userId = id;
-        next();
-    } catch (error) {
-        res.status(401).json({ error: "Token invalid" })
-    }
+    return res.status(401).json({ error: "Token invalid" });
+  }
 }

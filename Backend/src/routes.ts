@@ -21,7 +21,7 @@ export const router = Router();
 
 // Authenticate
 router.post("/auth", authcontroller.authenticate)
-router.get("/auth/verify", AuthMiddlware)
+router.get("/auth/verify", AuthMiddlware, authcontroller.verifyToken)
 
 // User
 router.post("/create", usercontroller.store)
@@ -30,3 +30,4 @@ router.get("/users", AuthMiddlware, usercontroller.index)
 // Finances
 router.post("/finance", AuthMiddlware, financesController.store)
 router.post("/finance/search", AuthMiddlware, financesController.search)
+router.post("/finance/delete", AuthMiddlware, financesController.deleteItem)
