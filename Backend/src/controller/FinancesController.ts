@@ -23,6 +23,9 @@ export class FinancesController {
       where: {
         userId: userId, // Filtra as finanças pelo userId
       },
+      orderBy: {
+        created_at: "asc", // Ordena pela data criada em ordem crescente
+      },
     });
 
     // Calcula o total com base nos tipos 'ENTRADA' e 'SAIDA'
@@ -69,9 +72,7 @@ export class FinancesController {
         where: { id_financas: id_financas },
       });
 
-      return res
-        .status(200)
-        .json({ response: "item deletado com sucesso"});
+      return res.status(200).json({ response: "item deletado com sucesso" });
     } catch (error) {
       return res
         .status(500)

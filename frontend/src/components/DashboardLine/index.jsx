@@ -10,30 +10,25 @@ import {
   markElementClasses,
 } from "@mui/x-charts/LineChart";
 
-// const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
-// const xLabels = [
-//   "Page A",
-//   "Page B",
-//   "Page C",
-//   "Page D",
-//   "Page E",
-//   "Page F",
-//   "Page G",
-// ];
-
-export const DashboardLine = ({ Icon_theme }) => {
+export const DashboardLine = ({ Icon_theme, category }) => {
   const { data } = useContext(FinanceContext);
 
   // Verifique se data e data.financas estão definidos
   const dados = Array.isArray(data.financas)
-    ? data.financas.map((item) => ({
-        id: item.id_financas,
-        descricao: item.descricao,
-        categoria: item.categoria,
-        valor: item.valor,
-        tipo: item.tipo,
-        data: format(new Date(item.created_at), "dd/MM/yyyy"),
-      }))
+    ? data.financas
+        .filter((item) => {
+          return category === "total"
+            ? true
+            : !category || item.categoria === category;
+        })
+        .map((item) => ({
+          id: item.id_financas,
+          descricao: item.descricao,
+          categoria: item.categoria,
+          valor: item.valor,
+          tipo: item.tipo,
+          data: format(new Date(item.created_at), "dd/MM/yyyy"),
+        }))
     : [];
 
   const pData = dados.map((item) => item.valor); // Extrai os valores financeiros

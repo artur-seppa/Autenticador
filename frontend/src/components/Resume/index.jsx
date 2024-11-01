@@ -1,6 +1,5 @@
 import { React, useContext } from "react";
 import { FinanceContext } from "../../context/FinanceContext";
-import "./styles.css";
 import { ResumeItem } from "../ResumeItem";
 import Box from "@mui/material/Box";
 
@@ -32,6 +31,7 @@ export const Resume = () => {
       >
         <ResumeItem
           title="Entradas"
+          category="entrada"
           value={data.totalEntrada}
           Icon={FaRegArrowAltCircleUp}
           Icon_theme={"hsl(120, 61%, 77%)"}
@@ -46,6 +46,7 @@ export const Resume = () => {
       >
         <ResumeItem
           title="Saídas"
+          category="saida"
           value={data.totalSaida}
           Icon={FaRegArrowAltCircleDown}
           Icon_theme={"hsl(0, 94%, 80%)"}
@@ -61,6 +62,7 @@ export const Resume = () => {
       >
         <ResumeItem
           title="Total"
+          category="total"
           value={data.total}
           Icon={FaDollarSign}
           Icon_theme={"hsl(220, 20%, 80%)"}

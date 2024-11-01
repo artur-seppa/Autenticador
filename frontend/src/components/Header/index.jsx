@@ -1,4 +1,6 @@
-import * as React from "react";
+import { React, useContext, useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
+
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -10,11 +12,13 @@ import Tooltip from "@mui/material/Tooltip";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
+import { deepPurple } from "@mui/material/colors";
 
 const settings = ["Logout"];
 
 export const Header = () => {
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const { signOut } = useContext(AuthContext);
+  const [anchorElUser, setAnchorElUser] = useState(null);
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -25,10 +29,9 @@ export const Header = () => {
   };
 
   return (
-    <AppBar position="fixed" style={{ background: '#111' }}>
+    <AppBar position="fixed" sx={{ background: "#111", boxShadow: "none" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -43,12 +46,16 @@ export const Header = () => {
               textDecoration: "none",
             }}
           >
-            LOGO
+            Finance.io
           </Typography>
-          <Box sx={{ flexGrow: 1 }} /> {/* Espaço flexível para empurrar o Avatar para a direita */}
+          <Box sx={{ flexGrow: 1 }} />{" "}
+          {/* Espaço flexível para empurrar o Avatar para a direita */}
           <Tooltip title="Open settings">
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+              <Avatar
+                src="/broken-image.jpg"
+                sx={{ bgcolor: deepPurple[500] }}
+              />
             </IconButton>
           </Tooltip>
           <Menu
@@ -69,7 +76,12 @@ export const Header = () => {
           >
             {settings.map((setting) => (
               <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Typography sx={{ textAlign: "center" }}>
+                <Typography
+                  sx={{ textAlign: "center" }}
+                  onClick={() => {
+                    signOut();
+                  }}
+                >
                   {setting}
                 </Typography>
               </MenuItem>
@@ -77,6 +89,13 @@ export const Header = () => {
           </Menu>
         </Toolbar>
       </Container>
+      <Box
+        sx={{
+          width: "100%",
+          height: "1px", // Altura da borda
+          background: "linear-gradient(to right, #ffffff, #0000)", // Gradiente da borda
+        }}
+      />
     </AppBar>
   );
 };

@@ -5,7 +5,6 @@ export const FinanceContext = createContext();
 
 export const FinanceProvider = ({ children }) => {
   const [data, setData] = useState([]);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -14,43 +13,49 @@ export const FinanceProvider = ({ children }) => {
         const response = await api.post("/finance/search", user.id);
         setData(response.data);
       } catch (err) {
-        setError(err);
+        console.log(err);
       }
     };
 
     fetchData();
   }, []);
 
-  const addItem = async (data) => {
-    // setData((prevData) => [...prevData, newItem]);
-
-    const response = await api.post("/finance", data);
+  const addItem = async (values) => {
+    const response = await api.post("/finance", values);
+    const financa = response.data.financa;
 
     if (response.status === 200) {
       let newTotal = data.total;
-      let newTotalEntrada = data.totalEntrada;
-      let newTotalSaida = data.totalSaida;
+      let newTotalEntrada = data.totalEntrada; // Inicialize com o valor atual
+      let newTotalSaida = data.totalSaida; // Inicialize com o valor atual
+      const valor = financa.valor;
 
-      switch (data.categoria) {
+      switch (values.categoria) {
         case "entrada":
-          newTotal -= valor;
-          newTotalEntrada -= valor;
+          newTotal += valor; // Adiciona valor ao total
+          newTotalEntrada += valor; // Adiciona valor a entrada
           break;
         case "saida":
-          newTotal += valor;
-          newTotalSaida -= valor;
-          break;
-        default:
+          newTotal -= valor; // Subtrai valor do total
+          newTotalSaida += valor; // Adiciona valor a saída
           break;
       }
 
-      setData((prevData) => ({
-        ...prevData,
-        total: newTotal,
-        totalEntrada: newTotalEntrada,
-        totalSaida: newTotalSaida,
-        financas: (prevData) => [...prevData, data],
-      }));
+      setData((prevData) => {
+        const updatedFinancas = [...prevData.financas, financa];
+
+        updatedFinancas.sort(
+          (a, b) => new Date(a.created_at) - new Date(b.created_at)
+        );
+
+        return {
+          ...prevData,
+          total: newTotal,
+          totalEntrada: newTotalEntrada,
+          totalSaida: newTotalSaida,
+          financas: updatedFinancas,
+        };
+      });
 
       return true;
     } else {
@@ -97,7 +102,7 @@ export const FinanceProvider = ({ children }) => {
 
   return (
     <FinanceContext.Provider
-      value={{ data, setData, error, addItem, removeItem }}
+      value={{ data, setData, addItem, removeItem }}
     >
       {children}
     </FinanceContext.Provider>

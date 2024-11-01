@@ -14,7 +14,7 @@ const bull = (
   </Box>
 );
 
-export const ResumeItem = ({ title, Icon, Icon_theme, value }) => {
+export const ResumeItem = ({ title, category, Icon, Icon_theme, value }) => {
   return (
     <Card
       variant="outlined"
@@ -53,7 +53,7 @@ export const ResumeItem = ({ title, Icon, Icon_theme, value }) => {
             alignItems: "center",
           }}
         >
-          <DashboardLine Icon_theme={Icon_theme}/>
+          <DashboardLine category={category} Icon_theme={Icon_theme}/>
         </Box>
       </CardContent>
     </Card>
