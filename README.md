@@ -30,32 +30,17 @@ valores de uma tabela de finanças.
 
 ## Imagens da Aplicação
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-    <div>
-        <img src="assets/login.png" alt="Tela de Login" style="width: 100%;"/>
-        <p style="text-align: center;">Tela de Login</p>
-    </div>
-    <div>
-        <img src="assets/expirada.png" alt="Sessão Expirada" style="width: 100%;"/>
-        <p style="text-align: center;">Sessão Expirada</p>
-    </div>
-</div>
+| ![Tela de Login](assets/login.png) | ![Sessão Expirada](assets/expirada.png) |
+| ----------------------------------- | --------------------------------------- |
+| Tela de Login                       | Sessão Expirada                        |
 
-<div style="margin-top: 20px;">
-    <img src="assets/home page.png" alt="Página de Finanças" style="width: 100%;"/>
-    <p style="text-align: center;">Página de Finanças</p>
-</div>
+| ![Pagina de Financas](assets/homePage.png) |
+| -------------------------------------------------------------------------- |
+|           Página de Finanças         |
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-    <div>
-        <img src="assets/adicionar item.png" alt="Adiciona Item" style="width: 100%;"/>
-        <p style="text-align: center;">Adicionar Item</p>
-    </div>
-    <div>
-        <img src="assets/deletar item.png" alt="Deletar Item" style="width: 100%;"/>
-        <p style="text-align: center;">Deletar Item</p>
-    </div>
-</div>
+| ![Tela de Login](assets/adicionarItem.png) | ![Sessão Expirada](assets/deletarItem.png) |
+| ----------------------------------- | --------------------------------------- |
+| Adicionar Item                       | Deletar Item                       |
 
 
 ## Como Usar
