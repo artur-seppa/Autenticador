@@ -28,6 +28,36 @@ valores de uma tabela de finanças.
   - Funcionalidade de **adicionar** e **deletar** transações.
   - Cada transação pode ser categorizada como "entrada" ou "saída", e o total é automaticamente atualizado.
 
+## Imagens da Aplicação
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+    <div>
+        <img src="assets/login.png" alt="Tela de Login" style="width: 100%;"/>
+        <p style="text-align: center;">Tela de Login</p>
+    </div>
+    <div>
+        <img src="assets/expirada.png" alt="Sessão Expirada" style="width: 100%;"/>
+        <p style="text-align: center;">Sessão Expirada</p>
+    </div>
+</div>
+
+<div style="margin-top: 20px;">
+    <img src="assets/home page.png" alt="Página de Finanças" style="width: 100%;"/>
+    <p style="text-align: center;">Página de Finanças</p>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+    <div>
+        <img src="assets/adicionar item.png" alt="Adiciona Item" style="width: 100%;"/>
+        <p style="text-align: center;">Adicionar Item</p>
+    </div>
+    <div>
+        <img src="assets/deletar item.png" alt="Deletar Item" style="width: 100%;"/>
+        <p style="text-align: center;">Deletar Item</p>
+    </div>
+</div>
+
+
 ## Como Usar
 
 1. Cadastro de Usuário: Ao acessar o sistema, o usuário pode criar uma conta fornecendo as informações necessárias.
